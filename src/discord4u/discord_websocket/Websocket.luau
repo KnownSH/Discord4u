@@ -3,7 +3,6 @@ local task = require("@lune/task")
 local process = require("@lune/process")
 local stdio = require("@lune/stdio")
 
-local Promise = require("../../Packages/Promise")
 local CloseEventCodes = require("CloseEventCodes")
 local WebsocketOpcodes = require("../components/WebsocketOpcodes")
 local GatewayOpcodes = WebsocketOpcodes.GatewayOpcodes
@@ -24,28 +23,29 @@ function Websocket.Impl.connect(self: Websocket, resume: boolean?)
     self.ws = net.socket(self.url)
     self.isRunning = true
     printTerminal("Websocket Started")
-    self:listen(resume):await()
+    self:listen(resume)
 end
 
 function Websocket.Impl.listen(self: Websocket, resume)
-    if not self.ws then return Promise.reject() end
-
-    return Promise.new(function(resolve, reject)
+    local success, _data = xpcall(function()
         while self.isRunning do
             local message = self.ws.next()
             if not message then
-                resolve()
+                return false
             end
             self:handleMessage(message, resume)
-        end
-    end):catch(function(error)
+        end 
+        return true
+    end, function(err)
         printTerminal(`Websocket error: {error}`)
-    end):finally(function()
+    end)
+
+    if success then
         printTerminal(`Websocket connection closed. Code: {self.ws.closeCode} {CloseEventCodes[self.ws.closeCode]}`)
         if self.isRunning then
             self:connect()
         end
-    end)
+    end
 end
 
 function Websocket.Impl.sendHeartbeat(self: Websocket)
