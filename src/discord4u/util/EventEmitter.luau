@@ -1,3 +1,5 @@
+local Class = require("@Discord/util/Class")
+
 --[=[
     @class EventEmitter
     An event emitter that supports both synchronous and asynchronous event handling.
@@ -5,7 +7,6 @@
 local EventEmitter = {}
 EventEmitter.Construct = {}
 EventEmitter.Impl = {}
-EventEmitter.Impl.__index = EventEmitter.Impl
 
 --[=[
     Registers a callback function for a specific event.
@@ -76,10 +77,7 @@ end
     @within EventEmitter
 ]=]
 function EventEmitter.Construct.new()
-    local self = {
-        listeners = {}
-    } 
-    return setmetatable(self, EventEmitter.Impl)
+    return (Class({listeners = {}}, EventEmitter.Impl) :: unknown) :: EventEmitter
 end
 
 type EventListeners = { 

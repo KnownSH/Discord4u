@@ -5,14 +5,14 @@ local process = require("@lune/process")
 local CloseEventCodes = require("CloseEventCodes")
 local Components = require("../components")
 local Constants = require("../Constants")
-local EventEmitter = require("../util/EventEmitter")
+local Class = require("@Discord/util/Class")
+local EventEmitter = require("@Discord/util/EventEmitter")
 local printTerminal = Components.printTerminal
 local GatewayOpcodes = Constants.GatewayOpcodes
 
 local Websocket = {}
 Websocket.Construct = {}
 Websocket.Impl = {}
-Websocket.Impl.__index = Websocket.Impl
 
 function Websocket.Impl.connect(self: Websocket, resume: boolean?)
     resume = resume or false
@@ -22,6 +22,7 @@ function Websocket.Impl.connect(self: Websocket, resume: boolean?)
     task.spawn(function()
         self:listen(resume)
     end)
+    return self
 end
 
 function Websocket.Impl.listen(self: Websocket, resume)
@@ -170,27 +171,23 @@ function Websocket.Impl.handleMessage(self: Websocket, message, resume)
 end
 
 function Websocket.Construct.new(url: string, token: string, intents: number, eventEmitter: EventEmitter.EventEmitter)
-    local self = {
+    return (Class({
         url = url,
         heartbeatInterval = nil,
         ws = nil,
         lastSequence = nil,
-        heartbeatIntervalId = nil,
         isRunning = false,
         token = token,
         intents = intents,
         eventEmitter = eventEmitter
-    }
-
-    return setmetatable(self, Websocket.Impl)
+    }, Websocket.Impl) :: unknown) :: Websocket
 end
 
 export type Websocket = {
     url: string,
     heartbeatInterval: number?,
-    ws: net.WebSocket?,
+    ws: net.WebSocket,
     lastSequence: any,
-    heartbeatIntervalId: number?,
     isRunning: boolean,
     token: string,
     intents: number,
