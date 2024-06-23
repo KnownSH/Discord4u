@@ -23,5 +23,3 @@ Yes that is correct, i'm using this as a opportunity to completely learn the Dis
 **Will it take me longer to program than it has taken Boeing's Starliner to reach orbit?** </br>Probably.
 
 **Is it realistic?** </br>Depends on my mood.
-
-There may be claims that this is some sort of AI generated slop README file, sadly it isn't, i've been without sleep for awhile, I should probably go to sleep.
