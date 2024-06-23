@@ -1,0 +1,9 @@
+{
+    "languageMode": "strict",
+    "lint": {
+        "*": false
+    },
+    "aliases": {
+        "Discord": "./src/discord4u"
+    }
+}

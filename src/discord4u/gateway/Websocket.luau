@@ -1,29 +1,27 @@
 local net = require("@lune/net")
 local task = require("@lune/task")
 local process = require("@lune/process")
-local stdio = require("@lune/stdio")
 
 local CloseEventCodes = require("CloseEventCodes")
-local WebsocketOpcodes = require("../components/WebsocketOpcodes")
-local GatewayOpcodes = WebsocketOpcodes.GatewayOpcodes
+local Components = require("../components")
+local Constants = require("../Constants")
+local EventEmitter = require("../util/EventEmitter")
+local printTerminal = Components.printTerminal
+local GatewayOpcodes = Constants.GatewayOpcodes
 
 local Websocket = {}
 Websocket.Construct = {}
 Websocket.Impl = {}
 Websocket.Impl.__index = Websocket.Impl
 
-local function printTerminal(str)
-    stdio.write(stdio.style("bold")..stdio.color("purple").."Discord4u: ")
-    stdio.write(stdio.style("reset")..stdio.color("reset"))
-    print(str)
-end
-
 function Websocket.Impl.connect(self: Websocket, resume: boolean?)
     resume = resume or false
     self.ws = net.socket(self.url)
     self.isRunning = true
     printTerminal("Websocket Started")
-    self:listen(resume)
+    task.spawn(function()
+        self:listen(resume)
+    end)
 end
 
 function Websocket.Impl.listen(self: Websocket, resume)
@@ -60,7 +58,7 @@ function Websocket.Impl.startHeartbeat(self: Websocket)
     task.spawn(function()
         while self.isRunning do
             self:sendHeartbeat()
-            task.wait((self.heartbeatInterval * math.random()) / 1000)
+            task.wait((self.heartbeatInterval :: number * math.random()) / 1000)
         end
     end)
 end
@@ -96,9 +94,9 @@ end
 function Websocket.Impl.handleEvent(self: Websocket, data)
     local receivedEvent = data['t']
     if receivedEvent == "READY" then
-        printTerminal("Connection sucessfully established")
         self.url = data['d']["resume_gateway_url"]
         self.sessionId = data['d']["session_id"]
+        self.eventEmitter:emit("ready")
     elseif receivedEvent == "MESSAGE_CREATE" then
         -- TEST
         if data['d']["channel_id"] == "982761892089045064" and data['d']["author"]["id"] ~= "1252925417438838836" then
@@ -171,7 +169,7 @@ function Websocket.Impl.handleMessage(self: Websocket, message, resume)
     end
 end
 
-function Websocket.Construct.new(url, token, intents)
+function Websocket.Construct.new(url: string, token: string, intents: number, eventEmitter: EventEmitter.EventEmitter)
     local self = {
         url = url,
         heartbeatInterval = nil,
@@ -181,6 +179,7 @@ function Websocket.Construct.new(url, token, intents)
         isRunning = false,
         token = token,
         intents = intents,
+        eventEmitter = eventEmitter
     }
 
     return setmetatable(self, Websocket.Impl)
@@ -195,7 +194,8 @@ export type Websocket = {
     isRunning: boolean,
     token: string,
     intents: number,
-    sessionId: number?
+    sessionId: number?,
+    eventEmitter: EventEmitter.EventEmitter
 } & typeof(Websocket.Impl)
 
 return Websocket.Construct

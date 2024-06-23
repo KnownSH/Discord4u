@@ -10,6 +10,9 @@ TLDR: It's not really on par with discord.js or discord.py or discord.net or eve
 - The codebase is absolutely unstable, "whats a sharding?"
 - It doesn't rate limit 😲
 
+## The Codebase so far...
+Its not very pretty, but weirdly its also kinda fine. I'll clean it up later.
+
 ## Why am I making this?
 To learn the Discord API, because apparently, I hate myself. While I know there are other (all one of them) Luau Discord bot frameworks, I have very specific, nitpicky reasons for not using them, mostly because of "Roblox holdovers" in codebases that I think have much better alternatives.
 
@@ -18,7 +21,7 @@ To learn the Discord API, because apparently, I hate myself. While I know there 
 ## What do I want Vorjal/Discord4u to do?
 I could rant about how I want to keep it mimimal and whatnot but let me save you some time: </br>
 **I want it to do everything** </br>
-Yes that is correct, i'm using this as a opportunity to completely learn the Discord API inside and out.
+Yes that is correct, i'm using this as a opportunity to completely learn the Discord API inside and out. The voice API, while it seems like a big hurdle, I do think I have a pretty neat way get around that issue.
 
 **Will it take me longer to program than it has taken Boeing's Starliner to reach orbit?** </br>Probably.
 

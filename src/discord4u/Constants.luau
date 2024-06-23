@@ -1,4 +1,4 @@
-local Enum = require("../util/Enum")
+local Enum = require("util/Enum")
 
 local GatewayOpcodes = Enum {
     EventDispatch = 0,
