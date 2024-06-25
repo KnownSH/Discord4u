@@ -3,6 +3,17 @@
 **Discord4u** is the library, and </br>
 **Vorjal** is the bot its api is focused on... ***for now*** *[cue dramatic thunder]*
 
+```luau
+-- Discord4u demo (its not much yet)
+local process = require("@lune/process")
+local DiscordClient = require("@Discord/")
+local client = DiscordClient.new({auth = process.env.DISCORD_TOKEN})
+
+client:on("ready", function()
+    print("Connection sucessfully established")
+end)
+```
+
 ## What can Vorjal/Discord4u do at the moment?
 TLDR: It's not really on par with discord.js or discord.py or discord.net or even [Discord Luau](https://github.com/DiscordLuau/discord-luau) but hey, it can at least send messages!
 - Websockets "work" (load-bearing air quotes). It's not complete, but if you're not afraid to get your hands dirty [with this](https://discord.com/developers/docs/topics/gateway-events), you can handle most events.
@@ -11,7 +22,7 @@ TLDR: It's not really on par with discord.js or discord.py or discord.net or eve
 - It doesn't rate limit 😲
 
 ## The Codebase so far...
-Its not very pretty, but weirdly its also kinda fine. I'll clean it up later.
+Its not very pretty, but weirdly its also kinda fine at the same time. I'll clean it up later.
 
 ## Why am I making this?
 To learn the Discord API, because apparently, I hate myself. While I know there are other (all one of them) Luau Discord bot frameworks, I have very specific, nitpicky reasons for not using them, mostly because of "Roblox holdovers" in codebases that I think have much better alternatives.
