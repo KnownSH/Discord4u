@@ -7,4 +7,3 @@ local client = DiscordClient.new({auth = process.env.DISCORD_TOKEN})
 client:on("ready", function()
     fancyPrint("Connection sucessfully established")
 end)
-

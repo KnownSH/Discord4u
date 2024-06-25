@@ -10,7 +10,6 @@ EventEmitter.Impl = {}
 
 --[=[
     Registers a callback function for a specific event.
-
     @method on
     @within EventEmitter
     @param event string -- The name of the event
@@ -41,7 +40,6 @@ end
     Waits for a specific event to occurs
     @method waitFor
     @within EventEmitter
-
     @param event string -- The name of the event to wait for
     @return ...any -- The arguments passed to the emit function
     @yields -- This function always yields
@@ -60,7 +58,6 @@ end
     Removes a specific listener from an event.
     @method removeListener
     @within EventEmitter
-
     @param event string -- The name of the event
     @param callback function -- The callback function to remove
 ]=]
@@ -77,7 +74,9 @@ end
     @within EventEmitter
 ]=]
 function EventEmitter.Construct.new()
-    return (Class({listeners = {}}, EventEmitter.Impl) :: unknown) :: EventEmitter
+    return Class(EventEmitter.Impl) {
+        listeners = {}
+    } :: EventEmitter
 end
 
 type EventListeners = { 

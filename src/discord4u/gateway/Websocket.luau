@@ -100,6 +100,7 @@ function Websocket.Impl.handleEvent(self: Websocket, data)
         self.eventEmitter:emit("ready")
     elseif receivedEvent == "MESSAGE_CREATE" then
         -- TEST
+        --[[
         if data['d']["channel_id"] == "982761892089045064" and data['d']["author"]["id"] ~= "1252925417438838836" then
             local response = net.request({
                 url = `https://discord.com/api/v10/channels/{data['d']["channel_id"]}/messages/{data['d']["id"]}`,
@@ -126,7 +127,7 @@ function Websocket.Impl.handleEvent(self: Websocket, data)
                     ["User-Agent"] = "DiscordBot (https://knownsh.cc/, 1.0.0)"
                 }
             } :: net.FetchParams)
-        end
+        end]]
     else
         print(data['t'])
     end
@@ -171,7 +172,7 @@ function Websocket.Impl.handleMessage(self: Websocket, message, resume)
 end
 
 function Websocket.Construct.new(url: string, token: string, intents: number, eventEmitter: EventEmitter.EventEmitter)
-    return (Class({
+    return Class(Websocket.Impl) {
         url = url,
         heartbeatInterval = nil,
         ws = nil,
@@ -180,7 +181,7 @@ function Websocket.Construct.new(url: string, token: string, intents: number, ev
         token = token,
         intents = intents,
         eventEmitter = eventEmitter
-    }, Websocket.Impl) :: unknown) :: Websocket
+    } :: Websocket
 end
 
 export type Websocket = {

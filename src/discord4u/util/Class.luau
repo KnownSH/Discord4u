@@ -1,8 +1,10 @@
 --!nocheck
 
-return function<struct, impl>(data: struct, impl: impl): struct & impl
-    local object = setmetatable(data, {
-        __index = impl
-    })
-    return object
+return function<impl>(impl: impl)
+    return function<struct>(data: struct): unknown
+        local object = setmetatable(data, {
+            __index = impl
+        })
+        return object
+    end
 end
