@@ -5,10 +5,11 @@ local process = require("@lune/process")
 local CloseEventCodes = require("CloseEventCodes")
 local Components = require("../components")
 local Constants = require("../Constants")
+local Signal = require("@Discord/util/Signal")
 local Class = require("@Discord/util/Class")
-local EventEmitter = require("@Discord/util/EventEmitter")
+local Types = require("@Discord/types")
 local printTerminal = Components.printTerminal
-local GatewayOpcodes = Constants.GatewayOpcodes
+local GatewayOpcodes, GatewayEvents = Constants.GatewayOpcodes, Constants.GatewayEvents
 
 local Websocket = {}
 Websocket.Construct = {}
@@ -94,11 +95,13 @@ end
 
 function Websocket.Impl.handleEvent(self: Websocket, data)
     local receivedEvent = data['t']
-    if receivedEvent == "READY" then
+    if receivedEvent == GatewayEvents.READY then
         self.url = data['d']["resume_gateway_url"]
         self.sessionId = data['d']["session_id"]
-        self.eventEmitter:emit("ready")
-    elseif receivedEvent == "MESSAGE_CREATE" then
+        self.events.ready:Fire()
+    elseif receivedEvent == GatewayEvents.INTERACTION_CREATE then
+        self.events.interactionCreated:Fire(data['d'])
+    elseif receivedEvent == GatewayEvents.MESSAGE_CREATE then
         -- TEST
         --[[
         if data['d']["channel_id"] == "982761892089045064" and data['d']["author"]["id"] ~= "1252925417438838836" then
@@ -128,6 +131,7 @@ function Websocket.Impl.handleEvent(self: Websocket, data)
                 }
             } :: net.FetchParams)
         end]]
+        print("message")
     else
         print(data['t'])
     end
@@ -171,7 +175,7 @@ function Websocket.Impl.handleMessage(self: Websocket, message, resume)
     end
 end
 
-function Websocket.Construct.new(url: string, token: string, intents: number, eventEmitter: EventEmitter.EventEmitter)
+function Websocket.Construct.new<T>(url: string, token: string, intents: number, events: Types.Discord4uEvents)
     return Class(Websocket.Impl) {
         url = url,
         heartbeatInterval = nil,
@@ -180,7 +184,7 @@ function Websocket.Construct.new(url: string, token: string, intents: number, ev
         isRunning = false,
         token = token,
         intents = intents,
-        eventEmitter = eventEmitter
+        events = events
     } :: Websocket
 end
 
@@ -193,7 +197,7 @@ export type Websocket = {
     token: string,
     intents: number,
     sessionId: number?,
-    eventEmitter: EventEmitter.EventEmitter
+    events: Types.Discord4uEvents
 } & typeof(Websocket.Impl)
 
 return Websocket.Construct

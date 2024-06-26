@@ -15,6 +15,23 @@ local GatewayOpcodes = Enum {
 }
 export type GatewayOpcodes = Enum.EnumItem<typeof(GatewayOpcodes)>
 
+local GatewayEvents = Enum {
+    READY = "READY",
+    INTERACTION_CREATE = "INTERACTION_CREATE",
+    MESSAGE_CREATE = "MESSAGE_CREATE"
+}
+export type GatewayEvents = Enum.EnumItem<typeof(GatewayEvents)>
+
+local InteractionTypes = Enum {
+    PING = 1,
+    APPLICATION_COMMAND = 2,
+    MESSAGE_COMPONENT = 3,
+    APPLICATION_COMMAND_AUTOCOMPLETE = 4,
+    MODAL_SUBMIT = 5
+}
+export type InteractionTypes = Enum.EnumItem<typeof(InteractionTypes)>
+
 return {
-    GatewayOpcodes = GatewayOpcodes
+    GatewayOpcodes = GatewayOpcodes,
+    GatewayEvents = GatewayEvents
 }
