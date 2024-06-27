@@ -45,7 +45,6 @@ end
 
 function OptionBuilder.Construct.new(optionType: OptionTypeNames, required: boolean?)
     local optionNumber = Constants.OptionTypes[optionType]
-    print(optionNumber)
     return Class(OptionBuilder.Impl) {
         params = {
             type = optionNumber,

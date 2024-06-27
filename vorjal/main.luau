@@ -78,6 +78,7 @@ local challengeCommand = CommandBuilder.new("SLASH_COMMAND")
 
 event.ready:Connect(function()
     client:register(pingpong)
+    client:register(challengeCommand)
 end)
 
 event.interactionCreated:Connect(function(interaction)
