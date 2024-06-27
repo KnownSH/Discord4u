@@ -10,7 +10,7 @@ export type ApplicationCommandParameter = {
 }
 
 export type ApplicationCommandData = {
-    id: number,
+    id: string,
     name: string,
     type: number,
     -- TODO resolved
@@ -29,7 +29,7 @@ export type RoleTags = {
 }
 
 export type Role = {
-    id: number,
+    id: string,
     name: string,
     color: number,
     hoist: boolean,
@@ -44,7 +44,7 @@ export type Role = {
 }
 
 export type Guild = {
-    id: number,
+    id: string,
     name: string,
     icon: string?,
     icon_hash: string?,
@@ -63,8 +63,8 @@ export type Guild = {
 }
 
 export type Interaction<InteractionData> = {
-    id: number,
-    application_id: number,
+    id: string,
+    application_id: string,
     type: number,
     data: InteractionData?,
     guild: Guild?,
@@ -73,9 +73,9 @@ export type Interaction<InteractionData> = {
     [any]: any
 }
 
-export type Discord4uEvents = {
+export type Discord4uEvents<I> = {
     ready: Signal.Signal<>,
-    interactionCreated: Signal.Signal<Interaction<ApplicationCommandData>>
+    interactionCreated: Signal.Signal<I>
 }
 
 return {}

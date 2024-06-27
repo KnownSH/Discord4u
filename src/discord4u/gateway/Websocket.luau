@@ -8,6 +8,8 @@ local Constants = require("../Constants")
 local Signal = require("@Discord/util/Signal")
 local Class = require("@Discord/util/Class")
 local Types = require("@Discord/types")
+local InteractionClass = require("@Discord/components/Interaction")
+
 local printTerminal = Components.printTerminal
 local GatewayOpcodes, GatewayEvents = Constants.GatewayOpcodes, Constants.GatewayEvents
 
@@ -98,39 +100,11 @@ function Websocket.Impl.handleEvent(self: Websocket, data)
     if receivedEvent == GatewayEvents.READY then
         self.url = data['d']["resume_gateway_url"]
         self.sessionId = data['d']["session_id"]
+        self.applicationId = data['d']["application"]["id"]
         self.events.ready:Fire()
     elseif receivedEvent == GatewayEvents.INTERACTION_CREATE then
-        self.events.interactionCreated:Fire(data['d'])
+        self.events.interactionCreated:Fire(InteractionClass.new(data['d'], self.headers))
     elseif receivedEvent == GatewayEvents.MESSAGE_CREATE then
-        -- TEST
-        --[[
-        if data['d']["channel_id"] == "982761892089045064" and data['d']["author"]["id"] ~= "1252925417438838836" then
-            local response = net.request({
-                url = `https://discord.com/api/v10/channels/{data['d']["channel_id"]}/messages/{data['d']["id"]}`,
-                method = "GET",
-                headers = {
-                    Authorization = `Bot {self.token}`,
-                    ["Content-type"] = "application/json; charset=UTF-8",
-                    ["User-Agent"] = "DiscordBot (https://knownsh.cc/, 1.0.0)"
-                }
-            })
-
-            local messageBody = net.jsonDecode(response.body)
-
-            net.request({
-                url = `https://discord.com/api/v10/channels/{data['d']["channel_id"]}/messages`,
-                method = "POST",
-                body = net.jsonEncode({
-                    content = `Wow <@!{messageBody.author.id}> said: "{messageBody.content}"`,
-                    tts = false
-                }),
-                headers = {
-                    Authorization = `Bot {self.token}`,
-                    ["Content-type"] = "application/json; charset=UTF-8",
-                    ["User-Agent"] = "DiscordBot (https://knownsh.cc/, 1.0.0)"
-                }
-            } :: net.FetchParams)
-        end]]
         print("message")
     else
         print(data['t'])
@@ -175,7 +149,13 @@ function Websocket.Impl.handleMessage(self: Websocket, message, resume)
     end
 end
 
-function Websocket.Construct.new<T>(url: string, token: string, intents: number, events: Types.Discord4uEvents)
+function Websocket.Construct.new<T>(
+    url: string, 
+    token: string, 
+    intents: number, 
+    events: Types.Discord4uEvents<InteractionClass.Interaction>,
+    headers
+)
     return Class(Websocket.Impl) {
         url = url,
         heartbeatInterval = nil,
@@ -184,7 +164,8 @@ function Websocket.Construct.new<T>(url: string, token: string, intents: number,
         isRunning = false,
         token = token,
         intents = intents,
-        events = events
+        events = events,
+        headers = headers
     } :: Websocket
 end
 
@@ -197,7 +178,9 @@ export type Websocket = {
     token: string,
     intents: number,
     sessionId: number?,
-    events: Types.Discord4uEvents
+    events: Types.Discord4uEvents<InteractionClass.Interaction>,
+    headers: any,
+    applicationId: number?
 } & typeof(Websocket.Impl)
 
 return Websocket.Construct

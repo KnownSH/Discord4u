@@ -1,5 +1,20 @@
 local Enum = require("util/Enum")
 
+local API: "https://discord.com/api/v10" = "https://discord.com/api/v10"
+
+local Endpoints = {
+    CreateGlobalApplicationCommand = "/applications/%s/commands",
+    CreateInteractionResponse = "/interactions/%s/%s/callback"
+}
+export type Endpoints = Enum.EnumItem<typeof(Endpoints)>
+
+local ApplicationCommandTypes = Enum {
+    CHAT_INPUT = 1,
+    USER = 2,
+    MESSAGE = 3
+}
+export type ApplicationCommandTypes = Enum.EnumItem<typeof(ApplicationCommandTypes)>
+
 local GatewayOpcodes = Enum {
     EventDispatch = 0,
     Heartbeat = 1,
@@ -32,6 +47,9 @@ local InteractionTypes = Enum {
 export type InteractionTypes = Enum.EnumItem<typeof(InteractionTypes)>
 
 return {
+    API = API,
+    ApplicationCommandTypes = ApplicationCommandTypes,
+    Endpoints = Endpoints,
     GatewayOpcodes = GatewayOpcodes,
     GatewayEvents = GatewayEvents
 }
