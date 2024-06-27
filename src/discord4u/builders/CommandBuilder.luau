@@ -1,6 +1,7 @@
 local net = require("@lune/net")
 local Constants = require("@Discord/Constants")
 local Class = require("@Discord/util/Class")
+local Types = require("@Discord/types")
 local ApplicationCommandTypes = require("@Discord/Constants").ApplicationCommandTypes
 
 local CommandBuilder = {}
@@ -20,6 +21,19 @@ function CommandBuilder.Impl.register(self: CommandBuilder, id, headers)
         self.id = responseBody.id
         self.name = responseBody.name
     end
+end
+
+function CommandBuilder.Impl.options(self: CommandBuilder, optionsList)
+    if optionsList["type"] ~= nil then
+        self.params.options = {optionsList.params}
+    else
+        local optionParamList = {}
+        for _, option: {[string]: any} in optionsList :: any do
+            table.insert(optionParamList, option.params)
+        end
+        self.params.options = optionParamList
+    end
+    return self
 end
 
 function CommandBuilder.Impl.setDescription(self: CommandBuilder, description: string): CommandBuilder
@@ -62,7 +76,8 @@ export type CommandBuilder = {
     params: any,
     type: "command",
     id: string?,
-    name: string?
+    name: string?,
+    options: any
 } & typeof(CommandBuilder.Impl)
 
 return CommandBuilder.Construct

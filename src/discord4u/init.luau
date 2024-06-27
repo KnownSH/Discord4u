@@ -50,5 +50,6 @@ export type Discord4u = {
 
 return {
     Client = Discord4u.Construct,
-    CommandBuilder = require("builders/CommandBuilder")
+    CommandBuilder = require("builders/CommandBuilder"),
+    OptionBuilder = require("builders/OptionBuilder")
 }

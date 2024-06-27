@@ -15,6 +15,22 @@ local ApplicationCommandTypes = Enum {
 }
 export type ApplicationCommandTypes = Enum.EnumItem<typeof(ApplicationCommandTypes)>
 
+local OptionTypes = Enum {
+    SUB_COMMAND = 1,
+    SUB_COMMAND_GROUP = 2,
+    STRING = 3,
+    INTEGER = 4,
+    BOOLEAN = 5,
+    USER = 6,
+    CHANNEL = 7,
+    ROLE = 8,
+    MENTIONABLE = 9,
+    NUMBER = 10,
+    ATTACHMENT = 11
+}
+export type OptionTypes = Enum.EnumItem<typeof(OptionTypes)>
+export type OptionType = number
+
 local GatewayOpcodes = Enum {
     EventDispatch = 0,
     Heartbeat = 1,
@@ -50,6 +66,7 @@ return {
     API = API,
     ApplicationCommandTypes = ApplicationCommandTypes,
     Endpoints = Endpoints,
+    OptionTypes = OptionTypes,
     GatewayOpcodes = GatewayOpcodes,
     GatewayEvents = GatewayEvents
 }

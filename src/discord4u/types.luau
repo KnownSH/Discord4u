@@ -73,6 +73,22 @@ export type Interaction<InteractionData> = {
     [any]: any
 }
 
+type BaseCommand = {
+    type: number,
+    name: string,
+    description: string,
+}
+
+export type OptionChoice = {
+    name: string,
+    value: string | number
+}
+
+export type CommandOption = BaseCommand & {
+    required: boolean?,
+    choices: { OptionChoice }
+}
+
 export type Discord4uEvents<I> = {
     ready: Signal.Signal<>,
     interactionCreated: Signal.Signal<I>
