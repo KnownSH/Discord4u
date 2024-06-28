@@ -82,7 +82,15 @@ event.ready:Connect(function()
 end)
 
 event.interactionCreated:Connect(function(interaction)
-    if interaction.data and interaction.data.name == pingpong.name then
+    if not interaction.data then 
+        return
+    end
+
+    if interaction.data.name == pingpong.name then
         interaction:reply("Pong!")
+    end
+
+    if interaction.data.name == challengeCommand.name and interaction.id then
+        local user = interaction
     end
 end)

@@ -1,8 +1,9 @@
 {
   "luau-lsp.require.mode": "relativeToFile",
+  "luau-lsp.inlayHints.functionReturnTypes": true,
+  "luau-lsp.platform.type": "standard",
   "luau-lsp.require.directoryAliases": {
     "@lune/": "~/.lune/.typedefs/0.8.5/",
-
     "@Discord": "src/discord4u"
   }
 }

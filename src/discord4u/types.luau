@@ -1,6 +1,10 @@
 local Signal = require("util/Signal")
 local Constants = require("Constants")
 
+-- Type definition for Discords API V10
+
+-- Other --
+
 export type ApplicationCommandParameter = {
     name: string,
     type: number,
@@ -62,6 +66,31 @@ export type Guild = {
     [any]: any
 }
 
+export type AvatarDecorationData = {
+    asset: string,
+    sku_id: string
+}
+
+export type User = {
+    id: string,
+    username: string,
+    discriminator: string,
+    global_name: string?,
+    avatar: string?,
+    bot: boolean?,
+    system: boolean?,
+    mfa_enabled: boolean?,
+    banner: string?,
+    accent_color: number?,
+    locale: string?,
+    verified: boolean?,
+    email: string?,
+    flags: number?,
+    premium_type: number?,
+    public_flags: number?,
+    avatar_decoration_data: AvatarDecorationData?
+}
+
 export type Interaction<InteractionData> = {
     id: string,
     application_id: string,
@@ -69,7 +98,10 @@ export type Interaction<InteractionData> = {
     data: InteractionData?,
     guild: Guild?,
     guild_id: number?,
+    user: User?,
     token: string,
+    version: number,
+
     [any]: any
 }
 
@@ -87,6 +119,136 @@ export type OptionChoice = {
 export type CommandOption = BaseCommand & {
     required: boolean?,
     choices: { OptionChoice }
+}
+
+-- Message Object --
+
+export type ChannelMention = {
+    id: string,
+    guild_id: string,
+    type: number,
+    name: string
+}
+
+export type Attachment = {
+    id: string,
+    filename: string,
+    title: string?,
+    description: string?,
+    content_type: string?,
+    size: number,
+    url: string,
+    proxy_url: string,
+    height: number?,
+    width: number?,
+    ephemeral: boolean?,
+    duration_secs: number?,
+    waveform: string?,
+    flags: number?
+}
+
+export type Embed = {
+    title: string?,
+    type: string?,
+    description: string?,
+    url: string?,
+    timestamp: string?,
+    color: number?,
+    footer: {
+        text: string,
+        icon_url: string?,
+        proxy_icon_url: string?
+    }?,
+    image: {
+        url: string,
+        proxy_url: string?,
+        height: number?,
+        width: number?
+    }?,
+    thumbnail: {
+        url: string,
+        proxy_url: string?,
+        height: number?,
+        width: number?
+    }?,
+    video: {
+        url: string?,
+        proxy_url: string?,
+        height: number?,
+        width: number?
+    }?,
+    provider: {
+        name: string?,
+        url: string?
+    }?,
+    author: {
+        name: string,
+        url: string?,
+        icon_url: string?,
+        proxy_icon_url: string?
+    }?,
+    fields: {{
+        name: string,
+        value: string,
+        inline: boolean?
+    }}?
+}
+
+export type Emoji = { -- Partial
+    id: string?,
+    name: string?,
+    roles: { Role }?,
+    user: User?,
+    require_colons: boolean?,
+    managed: boolean?,
+    animated: boolean?,
+    available: boolean?
+}
+
+export type Reaction = {
+    count: number,
+    count_details: {
+        burst: number,
+        normal: number
+    },
+    me: boolean,
+    me_burst: boolean,
+    emoji: Emoji,
+    burst_color: { any }
+}
+
+export type MessageActivity = {
+    type: number,
+    party_id: string?
+}
+
+type _ApplicationCommon = {
+    icon: string?,
+    rpc_origins: { string }?,
+
+}
+
+export type Message = {
+    id: string,
+    channel_id: string,
+    author: User,
+    content: string,
+    timestamp: string,
+    edited_timestamp: string?,
+    tts: boolean,
+    mention_everyone: boolean,
+    mentions: { User },
+    mention_roles: any, -- UNFINISHED
+    mention_channels: { ChannelMention }?,
+    attachments: { Attachment },
+    embeds: { Embed },
+    reactions: { Reaction },
+    nonce: (string | number)?,
+    pinned: boolean,
+    webhook_id: string?,
+    type: number,
+    activity: MessageActivity?,
+
 }
 
 export type Discord4uEvents<I> = {
