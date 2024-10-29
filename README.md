@@ -22,10 +22,8 @@ event.ready:Connect(function()
     -- registering commands is no longer needed
 end)
 
-event.interactionCreated:Connect(function(interaction)
-    if interaction.data and interaction.data.name == pingpong.name then
-        interaction:reply("Pong!")
-    end
+pingpong:Connect(function(interaction)
+    interaction:reply("Pong!")
 end)
 ```
 ![image of command working](https://imgur.com/Sdfolb5.png)
