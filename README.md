@@ -3,16 +3,15 @@
 
 ## Update: This project is "kinda not dead" again!
 I've been going though some major Luau burnout recently, thankfully it is slowly going away, I won't make any soild promises but I hope to finally get this library into a working/deployable state sometime after the new year.
-
-
+I plan on finally cleaning up the codebase and slightly changing how you write bots in Discord4u.
 
 ```luau
+-- Proposed 4u rewrite
 local process = require("@lune/process")
 local Discord = require("@Discord/")
 
-local ClientBuilder = Discord.Client
 local CommandBuilder = Discord.CommandBuilder
-local client = ClientBuilder.new({auth = process.env.DISCORD_TOKEN})
+local client = Discord.client({auth = process.env.DISCORD_TOKEN})
 local event = client.event
 
 local pingpong = CommandBuilder.new("SLASH_COMMAND")
@@ -20,7 +19,7 @@ local pingpong = CommandBuilder.new("SLASH_COMMAND")
     :setDescription("Responds with \"Pong!\" if successful.")
 
 event.ready:Connect(function()
-    client:register(pingpong)
+    -- registering commands is no longer needed
 end)
 
 event.interactionCreated:Connect(function(interaction)
